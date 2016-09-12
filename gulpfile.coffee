@@ -20,14 +20,16 @@ browserSync = require "browser-sync"
 
 # Модули для обработки изображений
 svgmin = require "gulp-svgmin"
-svgSprite = require "gulp-svg-sprites"
+svgstore = require "gulp-svgstore"
 
 # Пути к ресурсам
 path =
   scripts:
     build: "build/js"
     dest: "src/js"
-    source: []
+    source: [
+      "src/coffee/main.coffee"
+    ]
   styles:
     build: "build/css"
     dest: "src/css"
@@ -52,11 +54,7 @@ options =
   autoprefixer:
     browsers: ["last 2 versions"]
     cascade: false
-  svgSprite:
-    svgId: "icon-%f"
-    mode: "symbols"
-    preview: false
-    svg:symbols: "icons.svg"
+  svgstore:inlineSvg:true
   fileInclude:
     prefix: "@@"
     basepath: "src"
@@ -84,7 +82,7 @@ gulp.task "css", ->
 gulp.task "icons", ->
   gulp.src path.icons.source
   .pipe svgmin()
-  .pipe svgSprite options.svgSprite
+  .pipe svgstore options.svgstore
   .pipe gulp.dest path.icons.dest
 
 # Task: [JS] Компилируем и собираем скрипты
@@ -120,6 +118,7 @@ gulp.task "browser-sync", ->
 # Task: [Watch] Режим сборки для разработки
 gulp.task "watch", ["browser-sync", "html"], ->
   gulp.watch path.styles.all, ["css"]
+  gulp.watch path.icons.source, ["icons"]
   gulp.watch path.scripts.source, ["js"], browserSync.reload
   gulp.watch path.html.source, browserSync.reload
 
