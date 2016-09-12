@@ -107,20 +107,20 @@ gulp.task "images", ->
   .pipe gulp.dest path.image.build
 
 # Task: [HTML] Включаем в HTML инлайн стили для оптимизации
+# Note: Таск используется только для продакшена
 gulp.task "html", ->
   gulp.src path.html.source
   .pipe fileInclude options.fileInclude
-  .pipe gulpif buildMode, gulp.dest path.html.build
-  .pipe gulpif !buildMode, browserSync.stream()
+  .pipe gulp.dest path.html.build
 
 # Task: [BrowserSync] Инициализируем сервер для разработки
 gulp.task "browser-sync", ->
   browserSync options.browserSync
 
 # Task: [Watch] Режим сборки для разработки
-gulp.task "watch", ["browser-sync", "html"] ->
+gulp.task "watch", ["browser-sync", "html"], ->
   gulp.watch path.styles.all, ["css"]
   gulp.watch path.scripts.source, ["js"], browserSync.reload
-  gulp.watch path.html.source, ["html"]
+  gulp.watch path.html.source, browserSync.reload
 
 gulp.task "default", ["watch"]
