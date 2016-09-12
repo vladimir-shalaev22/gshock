@@ -20,7 +20,7 @@ browserSync = require "browser-sync"
 
 # Модули для обработки изображений
 svgmin = require "gulp-svgmin"
-svgstore = require "gulp-svgstore"
+svgsymbols = require "gulp-svg-symbols"
 
 # Пути к ресурсам
 path =
@@ -54,7 +54,6 @@ options =
   autoprefixer:
     browsers: ["last 2 versions"]
     cascade: false
-  svgstore:inlineSvg:true
   fileInclude:
     prefix: "@@"
     basepath: "src"
@@ -82,7 +81,7 @@ gulp.task "css", ->
 gulp.task "icons", ->
   gulp.src path.icons.source
   .pipe svgmin()
-  .pipe svgstore options.svgstore
+  .pipe svgsymbols()
   .pipe gulp.dest path.icons.dest
 
 # Task: [JS] Компилируем и собираем скрипты
